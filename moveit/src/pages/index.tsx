@@ -5,9 +5,10 @@ import { CompletedChalenges } from "../components/CompletedChalenges";
 
 import CountDown from "../components/CountDown";
 import Profile from "../components/Profile";
-import ChallengeBox from "../components/ChanllangeBox";
+import ChallengeBox from "../components/ChanllengeBox";
 
 import styles from '../styles/pages/Home.module.css';
+import { CountDownProvider } from '../contexts/CountDownContext';
 
 export default function Home() {
   return (
@@ -19,17 +20,19 @@ export default function Home() {
 
       <ExperienceBar/>
 
-      <section>
-        <div>
-          <Profile/>
-          <CompletedChalenges/>
-          <CountDown/>
-        </div>
+      <CountDownProvider>
+        <section>
+          <div>
+            <Profile/>
+            <CompletedChalenges/>
+            <CountDown/>
+          </div>
 
-        <div>
-          <ChallengeBox/>
-        </div>
-      </section>
+          <div>
+            <ChallengeBox/>
+          </div>
+        </section>
+      </CountDownProvider>
     </div>
   )
 }
