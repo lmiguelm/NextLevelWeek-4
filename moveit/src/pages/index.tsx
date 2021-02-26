@@ -13,6 +13,7 @@ import styles from '../styles/pages/Home.module.css';
 import { CountDownProvider } from '../contexts/CountDownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
 import { useTheme } from '../contexts/ThemeContext';
+import { Sidebar } from '../components/Sidebar';
 
 interface HomeProps {
   level: number;
@@ -29,28 +30,34 @@ export default function Home(props: HomeProps) {
       level={props.level}
       currentExperience={props.currentExperience}
       challengesCompleted={props.challengesCompleted}
-    >
+    > 
+
+    
       <div className={styles.container}>
 
+        <Sidebar active="home"/>
+      
         <Head>
           <title>Início | move.it</title>
         </Head>
 
-        <ExperienceBar/>
+        <div className={styles.content}>
+          <ExperienceBar/>
 
-        <CountDownProvider>
-          <section>
-            <div>
-              <Profile/>
-              <CompletedChalenges/>
-              <CountDown/>
-            </div>
+          <CountDownProvider>
+            <section>
+              <div>
+                <Profile/>
+                <CompletedChalenges/>
+                <CountDown/>
+              </div>
 
-            <div>
-              <ChallengeBox/>
-            </div>
-          </section>
-        </CountDownProvider>
+              <div>
+                <ChallengeBox/>
+              </div>
+            </section>
+          </CountDownProvider>
+        </div>
       </div>
     </ChallengesProvider>
   )
