@@ -1,7 +1,6 @@
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 
-
 import { ExperienceBar } from "../components/ExperienceBar";
 import { CompletedChalenges } from "../components/CompletedChalenges";
 import CountDown from "../components/CountDown";

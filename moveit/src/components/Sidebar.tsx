@@ -25,7 +25,11 @@ export function Sidebar({ active }: SidebarProps) {
             style={ active == 'home' ? { borderLeft: '2px solid var(--blue)' } : {} }
             
           >
-            <img src="/icons/home.svg" alt="Home"/>
+            { active == 'home' ? (
+              <img src="/icons/home-active.svg" alt="Home"/>
+            ) : (
+              <img src="/icons/home.svg" alt="Home"/>
+            )}
           </button>
         </Link>
 
@@ -34,7 +38,11 @@ export function Sidebar({ active }: SidebarProps) {
             type="button"
             style={ active == 'leaderboard' ? { borderLeft: '2px solid var(--blue)' } : {} }
           >
-            <img src="/icons/award.svg" alt="Home"/>
+            { active == 'leaderboard' ? (
+              <img src="/icons/award-active.svg" alt="Home"/>
+            ) : (
+              <img src="/icons/award.svg" alt="Home"/>
+            )}
           </button>
         </Link>
 
