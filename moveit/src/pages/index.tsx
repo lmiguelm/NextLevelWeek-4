@@ -12,6 +12,7 @@ import styles from '../styles/pages/Home.module.css';
 
 import { CountDownProvider } from '../contexts/CountDownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface HomeProps {
   level: number;
@@ -20,6 +21,8 @@ interface HomeProps {
 }
 
 export default function Home(props: HomeProps) {
+
+  const { changeTheme } = useTheme();
 
   return (
     <ChallengesProvider
@@ -55,13 +58,14 @@ export default function Home(props: HomeProps) {
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  const { level, currentExperience, challengesCompleted } = ctx.req.cookies;
+  const { level, currentExperience, challengesCompleted, isDark } = ctx.req.cookies;
 
   return {
     props: {
       level: Number(level),
       currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted)
+      challengesCompleted: Number(challengesCompleted),
+      isDark: Boolean(isDark)
     }
   }
 }

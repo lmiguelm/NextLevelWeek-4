@@ -1,8 +1,13 @@
+import { ThemeProvider } from '../contexts/ThemeContext';
+
 import '../styles/global.css';
+import '../styles/theme.css';
 
 function MyApp({ Component, pageProps }) {
   return (
-    <Component {...pageProps} /> 
+    <ThemeProvider>
+      <Component {...pageProps} /> 
+    </ThemeProvider>
   )
 }
 

@@ -4,8 +4,11 @@ import Document, {
   Main,
   NextScript
 } from 'next/document';
+import { useTheme } from '../contexts/ThemeContext';
+
 
 export default class MyDocument extends Document {
+
   render() {
     return (
       <Html lang="pt-BR">
@@ -17,7 +20,7 @@ export default class MyDocument extends Document {
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600&family=Rajdhani:wght@600&display=swap" rel="stylesheet"/>
         </Head>
 
-        <body>
+        <body className="dark-mode">
           <Main />
           <NextScript />
         </body>

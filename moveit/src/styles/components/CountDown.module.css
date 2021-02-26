@@ -3,7 +3,7 @@
   align-items: center;
   font-family: Rajdhani;
   font-weight: 600;
-  color: var(--title);
+  color: var(--text);
 }
 
 .countDownContainer > div {
@@ -13,7 +13,7 @@
   align-items: center;
   justify-content: space-evenly;
   
-  background: var(--white);
+  background: var(--background-secondary);
   box-shadow: 0 0 60px rgba(0, 0, 0, 0.05);
   border-radius: 5px;
   font-size: 8.5rem;
@@ -25,11 +25,11 @@
 }
 
 .countDownContainer > div span:first-child {
-  border-right: 1px solid #f0f1f3;
+  border-right: 1px solid var(--border);
 }
 
 .countDownContainer > div span:last-child {
-  border-left: 1px solid #f0f1f3;
+  border-left: 1px solid var(--border);
 }
 
 .countDownContainer > span {
@@ -70,7 +70,7 @@
 }
 
 .countDownButtonActive {
-  background: var(--white);
+  background: var(--background-secondary);
   color: var(--title);
 }
 .countDownButtonActive:not(:disabled):hover  {
@@ -79,7 +79,7 @@
 }
 
 .countDownButton:disabled {
-  background: var(--white);
+  background: var(--background-secondary);
   color: var(--text);
   cursor: not-allowed;
   border-bottom: 3px solid var(--green);
