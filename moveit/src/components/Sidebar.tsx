@@ -1,4 +1,5 @@
 import Link from 'next/link';
+import { useAuth } from '../contexts/AuthContext';
 
 import styles from '../styles/components/Sidebar.module.css';
 
@@ -7,6 +8,9 @@ interface SidebarProps {
 }
 
 export function Sidebar({ active }: SidebarProps) {
+
+  const { logout } = useAuth();
+
   return (
     <div className={styles.container}>
       <header>
@@ -49,9 +53,11 @@ export function Sidebar({ active }: SidebarProps) {
       </main>
 
       <footer>
-        <button type="button">
-          <img src="/icons/logout.svg" alt="Sair"/>
-        </button>
+        <Link href="/login">
+          <button type="button" onClick={logout}>
+            <img src="/icons/logout.svg" alt="Sair"/>
+          </button>
+        </Link>
       </footer>
     </div>
   )

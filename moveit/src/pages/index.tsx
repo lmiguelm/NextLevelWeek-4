@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
+import { useEffect } from 'react';
 
 import { ExperienceBar } from "../components/ExperienceBar";
 import { CompletedChalenges } from "../components/CompletedChalenges";
@@ -11,18 +12,36 @@ import styles from '../styles/pages/Home.module.css';
 
 import { CountDownProvider } from '../contexts/CountDownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
-import { useTheme } from '../contexts/ThemeContext';
 import { Sidebar } from '../components/Sidebar';
+import { useAuth } from '../contexts/AuthContext';
+import axios from 'axios';
+import { Console } from 'console';
+
+
+interface UserData {
+  id: number;
+  login: string;
+  name: string;
+  avatar_url: string;
+}
 
 interface HomeProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
+  token: string;
+  user: UserData;
 }
 
 export default function Home(props: HomeProps) {
 
-  const { changeTheme } = useTheme();
+  const { saveUserLogged, user, token } = useAuth();
+
+  useEffect(() => {
+    if(!user && !token) {
+      saveUserLogged(props.user, props.token);
+    }
+  }, []);
 
   return (
     <ChallengesProvider
@@ -30,8 +49,6 @@ export default function Home(props: HomeProps) {
       currentExperience={props.currentExperience}
       challengesCompleted={props.challengesCompleted}
     > 
-
-    
       <div className={styles.container}>
 
         <Sidebar active="home"/>
@@ -46,7 +63,7 @@ export default function Home(props: HomeProps) {
           <CountDownProvider>
             <section>
               <div>
-                <Profile/>
+                <Profile user={props.user} />
                 <CompletedChalenges/>
                 <CountDown/>
               </div>
@@ -62,16 +79,53 @@ export default function Home(props: HomeProps) {
   )
 }
 
+interface ResponseAuthData {
+  token: string;
+  user: UserData;
+}
+
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  const { level, currentExperience, challengesCompleted, isDark } = ctx.req.cookies;
+  const { level, currentExperience, challengesCompleted, isDark, token, user } = ctx.req.cookies;
+
+  const { code } = ctx.query;
+  
+  let tokenProps: String;
+  let userProps: UserData;
+
+  try {
+    tokenProps = String(token);
+    userProps = JSON.parse(user);
+  } catch (e) {
+    try {
+      if(!code) throw new Error();
+      
+      const { data } = 
+      await axios.post<ResponseAuthData>(`${process.env.MOVEIT_BASE_URL}/api/login/github/auth`, {
+        code
+      });
+  
+      tokenProps = data.token;
+      userProps = data.user;
+    } catch(e) {
+      console.log(e.message);  
+      return {
+        redirect: {
+          destination: '/login',
+          permanent: false
+        }
+      }
+    }
+  }
 
   return {
     props: {
       level: Number(level),
       currentExperience: Number(currentExperience),
       challengesCompleted: Number(challengesCompleted),
-      isDark: Boolean(isDark)
+      isDark: Boolean(isDark),
+      token: String(tokenProps),
+      user: userProps
     }
   }
 }
