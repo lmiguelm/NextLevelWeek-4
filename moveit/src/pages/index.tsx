@@ -39,7 +39,7 @@ export default function Home(props: HomeProps) {
   const { saveUserLogged, user, token } = useAuth();
 
   useEffect(() => {
-    if(!user && !token) {
+    if(!token && Object.keys(user).length == 0) {
       saveUserLogged(props.user, props.token);
     }
   }, []);
@@ -64,7 +64,7 @@ export default function Home(props: HomeProps) {
           <CountDownProvider>
             <section>
               <div>   
-                <Profile user={props.user} />
+                <Profile user={user} />
                 <CompletedChalenges/>
                 <CountDown/>
               </div>

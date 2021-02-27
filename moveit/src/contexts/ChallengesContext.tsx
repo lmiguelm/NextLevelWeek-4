@@ -3,6 +3,7 @@ import challenges from '../../challenges.json';
 
 import Cookies from 'js-cookie';
 import { LevelUpModal } from '../components/LevelUpModal';
+import axios from 'axios';
 
 interface ChallengesProviderProps {
   children: React.ReactNode
@@ -47,10 +48,17 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     Notification.requestPermission();
   }, []);
 
-  useEffect(() => {
-    Cookies.set('level', String(level));
-    Cookies.set('currentExperience', String(currentExperience));
-    Cookies.set('challengesCompleted', String(challengesCompleted));
+  useEffect(() => { 
+    async function challengeChange() {
+      const { id } = JSON.parse(Cookies.get('user'));
+      
+      await axios.post(`/api/users/update/${id}`, {
+        currentExperience,
+        challengesCompleted,
+        level
+      });
+    }
+    challengeChange();
   }, [level, currentExperience, challengesCompleted]);
 
   function startNewChallenge() {
