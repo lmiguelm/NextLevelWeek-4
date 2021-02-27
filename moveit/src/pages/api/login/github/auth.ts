@@ -6,13 +6,12 @@ interface UserData {
   login: string;
   name: string;
   avatar_url: string;
+  email: string;
 }
 
 export default async function Oauth(req: NextApiRequest, res: NextApiResponse) {
 
   const { code } = req.body;
-
-  console.log(code);
 
   try {
     const { data: { access_token } } = await axios.post(`https://github.com/login/oauth/access_token`, {
@@ -25,8 +24,6 @@ export default async function Oauth(req: NextApiRequest, res: NextApiResponse) {
       }
     });
 
-    console.log(access_token);
-
     const { data } = await axios.get<UserData>('https://api.github.com/user', {
       headers: {
         Accept: 'application/json',
@@ -38,11 +35,10 @@ export default async function Oauth(req: NextApiRequest, res: NextApiResponse) {
       id: data.id,
       login: data.login,
       name: data.name,
-      avatar_url: data.avatar_url
+      avatar_url: data.avatar_url,
+      email: data.email
     }
-
-    console.log(user);
-
+    
     return res.json({ user, token: access_token });
 
   } catch(e) {

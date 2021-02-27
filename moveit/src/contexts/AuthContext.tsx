@@ -1,7 +1,6 @@
-import { createContext, useContext, useEffect, useState } from 'react';
+import { createContext, useContext, useState } from 'react';
 
 import Cookies from 'js-cookie';
-import axios from 'axios';
 
 interface AuthProviderProps {
   children: React.ReactNode;
@@ -20,11 +19,12 @@ interface UserData {
   login: string;
   name: string;
   avatar_url: string;
+  email: string;
 }
 
 const AuthContext = createContext({} as AuthContextData);
 
-export function AuthProvider({ children, ...rest }: AuthProviderProps) {
+export function AuthProvider({ children }: AuthProviderProps) {
 
   const [isLogged, setIsLogged] = useState(false);
   const [token, setToken] = useState(null);
@@ -43,7 +43,6 @@ export function AuthProvider({ children, ...rest }: AuthProviderProps) {
   function logout() {
     Cookies.remove('user');
     Cookies.remove('token');
-    
   }
 
   return (

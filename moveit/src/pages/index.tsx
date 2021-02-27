@@ -23,6 +23,7 @@ interface UserData {
   login: string;
   name: string;
   avatar_url: string;
+  email: string;
 }
 
 interface HomeProps {
@@ -62,7 +63,7 @@ export default function Home(props: HomeProps) {
 
           <CountDownProvider>
             <section>
-              <div>
+              <div>   
                 <Profile user={props.user} />
                 <CompletedChalenges/>
                 <CountDown/>
@@ -107,6 +108,11 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
   
       tokenProps = data.token;
       userProps = data.user;
+
+      axios.post(`${process.env.MOVEIT_BASE_URL}/api/users/new`, {
+        user: userProps
+      });
+
     } catch(e) {
       console.log(e.message);  
       return {
