@@ -15,7 +15,7 @@ interface ProfileProps {
   user: UserData;
 }
 
-export default function Profile( { user }: ProfileProps) {
+export function Profile( { user }: ProfileProps) {
 
   const { level } = useChallengeContext();
 

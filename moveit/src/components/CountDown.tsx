@@ -8,7 +8,7 @@ import {
   X
 } from 'react-bootstrap-icons';
 
-export default function CountDown() {
+export function CountDown() {
 
   const { 
     minutes, 

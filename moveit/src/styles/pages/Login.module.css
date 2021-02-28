@@ -33,6 +33,7 @@
 .container main div p {
   margin-left: 0.5rem;
   line-height: 1.5rem;
+  color: var(--white);
 }
 
 
@@ -53,6 +54,8 @@
   display: flex;
   justify-content: center;
   align-items: center;
+
+  color: var(--white);
 }
 .container main button:hover {
   filter: brightness(0.9);

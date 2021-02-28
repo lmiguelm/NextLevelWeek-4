@@ -1,18 +1,21 @@
-import axios from 'axios';
-import Cookies from 'js-cookie';
+import { useEffect, useState } from 'react';
+
 import { GetStaticProps, } from 'next';
 import Head from 'next/head';
-import { useEffect, useState } from 'react';
+
+import axios from 'axios';
+import Cookies from 'js-cookie';
 
 import { Sidebar } from '../components/Sidebar';
 import { AuthProvider } from '../contexts/AuthContext';
-
-import styles from '../styles/pages/LeaderBoard.module.css';
 
 import {
   ArrowUpCircle,
   InfoCircleFill
 } from 'react-bootstrap-icons';
+
+import styles from '../styles/pages/LeaderBoard.module.css';
+import { useTheme } from '../contexts/ThemeContext';
 
 interface ScoreFullData {
   currentExperience: number;

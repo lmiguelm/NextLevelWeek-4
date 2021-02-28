@@ -1,4 +1,6 @@
-import { createContext, useContext, useState } from 'react';
+import Cookies from 'js-cookie';
+import { createContext, useContext, useEffect, useState } from 'react';
+import { setTimeout } from 'timers';
 
 interface ThemeProviderProps {
   children: React.ReactNode;
@@ -6,7 +8,7 @@ interface ThemeProviderProps {
 
 interface ThemeContextData {
   isDark: boolean;
-  changeTheme(): void;
+  changeTheme(isDark: boolean): void;
 }
 
 const ThemeContext = createContext({} as ThemeContextData);
@@ -15,17 +17,19 @@ export function ThemeProvider({ children }: ThemeProviderProps) {
 
   const [isDark, setIsDark] = useState(true);
 
-  function changeTheme() {
-    setIsDark(!isDark);
+  function changeTheme(isDark: boolean) {
+    
+    setIsDark(isDark);
+    Cookies.set('isDark', String(isDark));
     
     const body = document.querySelector('body');
     
     if(isDark) {
-      body.classList.remove('dark-mode');
-      body.classList.add('light-mode');
-    } else {
       body.classList.remove('light-mode');
       body.classList.add('dark-mode');  
+    } else {
+      body.classList.remove('dark-mode');
+      body.classList.add('light-mode');
     }
   }
 

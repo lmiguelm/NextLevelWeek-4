@@ -1,21 +1,20 @@
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
-import { useEffect } from 'react';
 
+import axios from 'axios';
+
+import { CountDown } from "../components/CountDown";
+import { Profile } from "../components/Profile";
+import { ChallengeBox } from "../components/ChanllengeBox";
 import { ExperienceBar } from "../components/ExperienceBar";
 import { CompletedChalenges } from "../components/CompletedChalenges";
-import CountDown from "../components/CountDown";
-import Profile from "../components/Profile";
-import ChallengeBox from "../components/ChanllengeBox";
-
-import styles from '../styles/pages/Home.module.css';
+import { Sidebar } from '../components/Sidebar';
 
 import { CountDownProvider } from '../contexts/CountDownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
-import { Sidebar } from '../components/Sidebar';
-import { AuthProvider, useAuth } from '../contexts/AuthContext';
-import axios from 'axios';
+import { AuthProvider } from '../contexts/AuthContext';
 
+import styles from '../styles/pages/Home.module.css';
 
 interface UserData {
   githubId: number;
@@ -35,7 +34,7 @@ interface ScoreData {
 interface HomeProps {
   token: string;
   user: UserData;
-  score: ScoreData
+  score: ScoreData;
 }
 
 export default function Home(props: HomeProps) {
@@ -135,7 +134,7 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
       props: {
         token,
         score,
-        user: JSON.parse(user)
+        user: JSON.parse(user),
       }
     }
   }
