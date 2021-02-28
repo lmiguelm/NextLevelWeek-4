@@ -1,7 +1,7 @@
 import mongoose from 'mongoose';
 
 const UserSchema = new mongoose.Schema({
-  id: {
+  githubId: {
     type: Number,
   },
   login: {
@@ -18,21 +18,6 @@ const UserSchema = new mongoose.Schema({
   email: {
     type: String,
     default: null
-  },
-  level: {
-    type: Number,
-    requireD: true,
-    default: 1
-  },
-  currentExperience: {
-    type: Number,
-    required: true,
-    default: 0
-  },
-  challengesCompleted: {
-    type: Number,
-    required: true,
-    default: 0
   },
 });
 

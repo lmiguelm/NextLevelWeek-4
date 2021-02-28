@@ -2,8 +2,10 @@ import styles from '../styles/components/Profile.module.css';
 
 import { useChallengeContext } from '../contexts/ChallengesContext';
 
+import { ArrowUpCircle } from 'react-bootstrap-icons';
+
 interface UserData {
-  id: number;
+  githubId: number;
   login: string;
   name: string;
   avatar_url: string;
@@ -19,11 +21,11 @@ export default function Profile( { user }: ProfileProps) {
 
   return (
     <div className={styles.profileContainer}>
-      <img src={user.avatar_url} alt="Luis Miguel"/>
+      <img src={user.avatar_url} alt={user.login}/>
       <div>
         <strong>{user.login}</strong>
         <p>
-          <img src="icons/level.svg" alt="level"/>
+          <ArrowUpCircle color="var(--green)" style={{ marginRight: '0.5rem' }} />
           Level: {level}
         </p>
       </div>

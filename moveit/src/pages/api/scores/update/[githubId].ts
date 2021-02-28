@@ -1,6 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
 import { connectToDatabase } from '../../../../config/connectionDatabase';
+import { Score } from '../../../../models/Score';
 import { User } from '../../../../models/User';
 
 export default async function UpdateUser(req: NextApiRequest, res: NextApiResponse) {
@@ -11,10 +12,15 @@ export default async function UpdateUser(req: NextApiRequest, res: NextApiRespon
   }
 
   try {
-    const { query: { id } } = req;
+    const { query: { githubId } } = req;
     const data = req.body;
 
-    await User.updateOne({ id }, data);
+    console.log('update', data);
+    console.log('githubId', githubId);
+    
+    const user = await User.findOne({ githubId });
+    
+    await Score.updateOne({ user: { _id: user.id } }, data);
 
     return res.status(200);
 

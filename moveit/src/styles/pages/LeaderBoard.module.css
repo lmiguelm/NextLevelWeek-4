@@ -29,6 +29,13 @@
   font-size: 2.5rem;
 }
 
+.content header > p {
+  display: flex;
+  align-items: center;
+  margin-top: 0.5rem;
+  font-size: .75rem;
+}
+
 .content main {
   margin: 2.5rem;
   width: 100%;

@@ -10,6 +10,8 @@ interface ChallengesProviderProps {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
+  totalExperience: number;
+  userId: number;
 }
 
 interface Challenge {
@@ -38,6 +40,8 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const [level, setLevel] = useState(rest.level ?? 1);
   const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0);
   const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0);
+  const [totalExperience, setTotalExperience] = useState(rest.totalExperience ?? 0);
+
   const [isLevelUpModalOpen, SetIsLevelModalOpen] = useState(false);
 
   const [activeChallenge, setActiveChallenge] = useState(null);
@@ -49,17 +53,20 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   }, []);
 
   useEffect(() => { 
-    async function challengeChange() {
-      const { id } = JSON.parse(Cookies.get('user'));
-      
-      await axios.post(`/api/users/update/${id}`, {
-        currentExperience,
-        challengesCompleted,
-        level
-      });
-    }
-    challengeChange();
+    Cookies.set('level', level.toString());
+    Cookies.set('currentExperience', currentExperience.toString());
+    Cookies.set('challengesCompleted', challengesCompleted.toString());
+    Cookies.set('totalExperience', totalExperience.toString());
   }, [level, currentExperience, challengesCompleted]);
+
+  async function challengeChange(data) {
+    await axios.post(`/api/scores/update/${data.githubId}`, {
+      currentExperience: data.currentExperience,
+      challengesCompleted: data.challengesCompleted,
+      level: data.level,
+      totalExperience: data.totalExperience
+    });
+  }
 
   function startNewChallenge() {
     const randomChallengeIndex = Math.floor(Math.random() * challenges.length);
@@ -93,15 +100,27 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     const { amount } = activeChallenge;
 
     let finalExperience = currentExperience + amount;
+    let l = level;
+
 
     if(finalExperience >= experienceToNextLevel) {
       levelUp();
+      l++;
       finalExperience = finalExperience - experienceToNextLevel;
     }
 
     setCurrentExperience(finalExperience);
     setActiveChallenge(null);
     setChallengesCompleted(challengesCompleted + 1);
+    setTotalExperience( totalExperience + amount);
+    
+    challengeChange({
+      githubId: rest.userId,
+      currentExperience: finalExperience,
+      challengesCompleted: challengesCompleted + 1,
+      level: l,
+      totalExperience: totalExperience + amount,
+    });
   }
 
   function closeLevelUpModal() {

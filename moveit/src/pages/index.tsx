@@ -13,108 +13,89 @@ import styles from '../styles/pages/Home.module.css';
 import { CountDownProvider } from '../contexts/CountDownContext';
 import { ChallengesProvider } from '../contexts/ChallengesContext';
 import { Sidebar } from '../components/Sidebar';
-import { useAuth } from '../contexts/AuthContext';
+import { AuthProvider, useAuth } from '../contexts/AuthContext';
 import axios from 'axios';
-import { Console } from 'console';
 
 
 interface UserData {
-  id: number;
+  githubId: number;
   login: string;
   name: string;
   avatar_url: string;
   email: string;
 }
 
-interface HomeProps {
+interface ScoreData {
   level: number;
   currentExperience: number;
   challengesCompleted: number;
+  totalExperience: number;
+}
+
+interface HomeProps {
   token: string;
   user: UserData;
+  score: ScoreData
 }
 
 export default function Home(props: HomeProps) {
-
-  const { saveUserLogged, user, token } = useAuth();
-
-  useEffect(() => {
-    if(!token && Object.keys(user).length == 0) {
-      saveUserLogged(props.user, props.token);
-    }
-  }, []);
-
   return (
-    <ChallengesProvider
-      level={props.level}
-      currentExperience={props.currentExperience}
-      challengesCompleted={props.challengesCompleted}
-    > 
-      <div className={styles.container}>
+    <AuthProvider
+      user={props.user}
+      token={props.token}
+    >
+      <ChallengesProvider
+        level={props.score.level}
+        currentExperience={props.score.currentExperience}
+        challengesCompleted={props.score.challengesCompleted}
+        totalExperience={props.score.totalExperience}
+        userId={props.user.githubId}
+      > 
+        <div className={styles.container}>
 
-        <Sidebar active="home"/>
-      
-        <Head>
-          <title>Início | move.it</title>
-        </Head>
+          <Sidebar active="home"/>
+        
+          <Head>
+            <title>Início | move.it</title>
+          </Head>
 
-        <div className={styles.content}>
-          <ExperienceBar/>
+          <div className={styles.content}>
+            <ExperienceBar/>
 
-          <CountDownProvider>
-            <section>
-              <div>   
-                <Profile user={user} />
-                <CompletedChalenges/>
-                <CountDown/>
-              </div>
+            <CountDownProvider>
+              <section>
+                <div>   
+                  <Profile user={props.user} />
+                  <CompletedChalenges/>
+                  <CountDown/>
+                </div>
 
-              <div>
-                <ChallengeBox/>
-              </div>
-            </section>
-          </CountDownProvider>
+                <div>
+                  <ChallengeBox/>
+                </div>
+              </section>
+            </CountDownProvider>
+          </div>
         </div>
-      </div>
-    </ChallengesProvider>
+      </ChallengesProvider>
+    </AuthProvider>
   )
 }
 
-interface ResponseAuthData {
-  token: string;
+interface ResponseApi {
   user: UserData;
+  score: ScoreData;
 }
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  const { level, currentExperience, challengesCompleted, isDark, token, user } = ctx.req.cookies;
+  const { token } = ctx.req.cookies;
 
-  const { code } = ctx.query;
-  
-  let tokenProps: String;
-  let userProps: UserData;
+  if(!token) {
 
-  try {
-    tokenProps = String(token);
-    userProps = JSON.parse(user);
-  } catch (e) {
-    try {
-      if(!code) throw new Error();
-      
-      const { data } = 
-      await axios.post<ResponseAuthData>(`${process.env.MOVEIT_BASE_URL}/api/login/github/auth`, {
-        code
-      });
-  
-      tokenProps = data.token;
-      userProps = data.user;
+    const tokenUrl = ctx.query.access_token;
 
-      axios.post(`${process.env.MOVEIT_BASE_URL}/api/users/new`, {
-        user: userProps
-      });
-
-    } catch(e) {
-      console.log(e.message);  
+    if(!tokenUrl) {
       return {
         redirect: {
           destination: '/login',
@@ -122,16 +103,40 @@ export const getServerSideProps: GetServerSideProps = async (ctx) => {
         }
       }
     }
-  }
 
-  return {
-    props: {
+    const { data } = await axios.post<ResponseApi>(`${process.env.MOVEIT_BASE_URL}/api/${tokenUrl}`);
+
+    return {
+      props: {  
+        score: data.score,
+        user: data.user,
+        token: tokenUrl,
+      }
+    }
+  } else {
+
+    const {
+      user,
+      level,
+      currentExperience,
+      challengesCompleted,
+      totalExperience,
+      
+    } = ctx.req.cookies;
+
+    const score = {
       level: Number(level),
       currentExperience: Number(currentExperience),
       challengesCompleted: Number(challengesCompleted),
-      isDark: Boolean(isDark),
-      token: String(tokenProps),
-      user: userProps
+      totalExperience: Number(totalExperience),
+    }
+
+    return {
+      props: {
+        token,
+        score,
+        user: JSON.parse(user)
+      }
     }
   }
 }

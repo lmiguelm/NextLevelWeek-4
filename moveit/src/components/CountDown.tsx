@@ -2,6 +2,12 @@ import styles from '../styles/components/CountDown.module.css';
 
 import { useCountDownContext } from '../contexts/CountDownContext';
 
+import {
+  CaretRightFill,
+  CheckCircleFill,
+  X
+} from 'react-bootstrap-icons';
+
 export default function CountDown() {
 
   const { 
@@ -38,6 +44,7 @@ export default function CountDown() {
           className={styles.countDownButton}
         >
           Ciclo encerrado
+          <CheckCircleFill color="var(--green)" style={{ marginLeft: '1rem' }} />
        </button>
       ) : (
         <>
@@ -48,6 +55,7 @@ export default function CountDown() {
               className={`${styles.countDownButton} ${styles.countDownButtonActive}`}
             >
               Abandonar ciclo
+              <X style={{ marginLeft: '1rem' }} color="var(--title)"/>
             </button>
           )  : (
             <button 
@@ -56,6 +64,7 @@ export default function CountDown() {
               className={styles.countDownButton}
             >
               Iniciar uim ciclo
+              <CaretRightFill style={{ marginLeft: '1rem' }} color="var(--white)"/>
             </button>
           )}
         </>

@@ -39,23 +39,21 @@
   filter: brightness(0.9);
 }
 
+.container footer {
+  display: flex;
+  flex-direction: column;
+}
+
 .container footer button {
-  width: 5rem;
-  height: 40px;
-
-  outline: none;
-  border: none;
   background: none;
-
-  border-radius: 5px;
-
-  transition: background-color .2s;
+  border: none;
+  outline: none;
+  padding: 0.5rem;
+  transition: filter .2s;
+  width: 112px;
 }
 .container footer button:hover {
-  background: var(--red);
+  border-left: 2px solid var(--red);
+  filter: brightness(0.9);
 }
 
-.container footer button img {
-  width: 24px;
-  height: 24px;
-}

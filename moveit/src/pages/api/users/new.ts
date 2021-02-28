@@ -3,7 +3,6 @@ import { NextApiRequest, NextApiResponse } from 'next';
 import { connectToDatabase } from '../../../config/connectionDatabase';
 import { User } from '../../../models/User';
 
-
 export default async function NewUser(req: NextApiRequest, res: NextApiResponse) {
   try {
     connectToDatabase();
@@ -14,15 +13,16 @@ export default async function NewUser(req: NextApiRequest, res: NextApiResponse)
   try {
     const {user} = req.body;
 
-    const existUser = await User.findOne({ id: user.id });
+    const existUser = await User.findOne({ githubId: user.id });
 
     if(!existUser) {
-      await User.create(user);
+      const currentUser = await User.create(user);
+      return res.json(currentUser);
     } else {
-      await User.updateOne({ id: user.id }, user);
+      User.updateOne({ githubId: user.id }, user);
+      const currentUser = await User.findOne({ githubId: user.id });
+      return res.json(currentUser);
     }
-
-    return res.status(200);
     
   } catch (e) {
     return res.status(400);
