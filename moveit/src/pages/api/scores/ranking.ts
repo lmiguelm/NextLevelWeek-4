@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 
-import { connectToDatabase } from '../../config/connectionDatabase';
-import { Score } from '../../models/Score';
+import { connectToDatabase } from '../../../config/connectionDatabase';
+import { Score } from '../../../models/Score';
 
 export default async function UpdateUser(req: NextApiRequest, res: NextApiResponse) {
   try {

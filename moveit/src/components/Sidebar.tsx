@@ -4,12 +4,10 @@ import { useAuth } from '../contexts/AuthContext';
 import styles from '../styles/components/Sidebar.module.css';
 
 import { 
-  ArrowLeft,
   House,
   Trophy,
   BoxArrowInLeft
 } from 'react-bootstrap-icons';
-import { useEffect } from 'react';
 
 interface SidebarProps {
   active: 'home' | 'leaderboard'
@@ -17,11 +15,7 @@ interface SidebarProps {
 
 export function Sidebar({ active }: SidebarProps) {
 
-  const { logout, token } = useAuth();
-
-  useEffect(() => {
-    console.log('sidebar', token)
-  })
+  const { logout } = useAuth();
 
   return (
     <div className={styles.container}>
@@ -34,19 +28,15 @@ export function Sidebar({ active }: SidebarProps) {
       </header>
 
       <main>
-
-       { token && (
-          <Link href="/">
-            <button 
-              type="button"
-              style={ active == 'home' ? { borderLeft: '2px solid var(--blue)' } : {} }
-              
-            >
-              <House color={ active == 'home' ? 'var(--blue)' : 'var(--gray-line)' } size={30}/>
-            </button>
-          </Link>
-       )}
-
+        <Link href="/">
+          <button 
+            type="button"
+            style={ active == 'home' ? { borderLeft: '2px solid var(--blue)' } : {} }
+          >
+            <House color={ active == 'home' ? 'var(--blue)' : 'var(--gray-line)' } size={30}/>
+          </button>
+        </Link>
+      
         <Link href="/leaderboard">
           <button 
             type="button"
@@ -55,23 +45,14 @@ export function Sidebar({ active }: SidebarProps) {
             <Trophy color={ active == 'leaderboard' ? 'var(--blue)' : 'var(--gray-line)' } size={30}/>
           </button>
         </Link>
-
       </main>
 
       <footer>
-        { token ? ( 
-          <Link href="/login">
-            <button type="button" onClick={logout}>
-              <BoxArrowInLeft size={30} color="var(--gray-line)"/>
-            </button>
-          </Link>
-        ) : (
-          <Link href="/login">
-            <button type="button" onClick={logout}>
-              <ArrowLeft color="var(--text)" size={30}/>
-            </button>
-          </Link>
-        )}
+        <Link href="/login">
+          <button type="button" onClick={logout}>
+            <BoxArrowInLeft size={30} color="var(--gray-line)"/>
+          </button>
+        </Link>
       </footer>
     </div>
   )

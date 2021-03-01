@@ -1,8 +1,6 @@
 import Head from 'next/head';
 import { GetServerSideProps } from 'next';
 
-import axios from 'axios';
-
 import { CountDown } from "../components/CountDown";
 import { Profile } from "../components/Profile";
 import { ChallengeBox } from "../components/ChanllengeBox";
@@ -15,6 +13,8 @@ import { ChallengesProvider } from '../contexts/ChallengesContext';
 import { AuthProvider } from '../contexts/AuthContext';
 
 import styles from '../styles/pages/Home.module.css';
+import { useEffect } from 'react';
+import Loading from '../components/Loading';
 
 interface UserData {
   githubId: number;
@@ -34,10 +34,15 @@ interface ScoreData {
 interface HomeProps {
   token: string;
   user: UserData;
-  score: ScoreData;
+  score: ScoreData
 }
 
 export default function Home(props: HomeProps) {
+
+  useEffect(() => {
+    console.log(props.user);
+  }, [])
+
   return (
     <AuthProvider
       user={props.user}
@@ -81,61 +86,28 @@ export default function Home(props: HomeProps) {
   )
 }
 
-interface ResponseApi {
-  user: UserData;
-  score: ScoreData;
-}
-
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
 
-  const { token } = ctx.req.cookies;
+  const {
+    user,
+    score,
+    token
+  } = ctx.req.cookies;
 
   if(!token) {
-
-    const tokenUrl = ctx.query.access_token;
-
-    if(!tokenUrl) {
-      return {
-        redirect: {
-          destination: '/login',
-          permanent: false
-        }
-      }
-    }
-
-    const { data } = await axios.post<ResponseApi>(`${process.env.MOVEIT_BASE_URL}/api/${tokenUrl}`);
-
     return {
-      props: {  
-        score: data.score,
-        user: data.user,
-        token: tokenUrl,
+      redirect: {
+        destination: '/login',
+        permanent: false
       }
     }
-  } else {
+  }
 
-    const {
-      user,
-      level,
-      currentExperience,
-      challengesCompleted,
-      totalExperience,
-      
-    } = ctx.req.cookies;
-
-    const score = {
-      level: Number(level),
-      currentExperience: Number(currentExperience),
-      challengesCompleted: Number(challengesCompleted),
-      totalExperience: Number(totalExperience),
-    }
-
-    return {
-      props: {
-        token,
-        score,
-        user: JSON.parse(user),
-      }
+  return {
+    props: {
+      user: JSON.parse(user),
+      score: JSON.parse(score),
+      token
     }
   }
 }

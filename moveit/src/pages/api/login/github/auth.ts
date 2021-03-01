@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import axios from 'axios';
+import Cookies from 'js-cookie';
 
 export default async function Oauth(req: NextApiRequest, res: NextApiResponse) {
 
@@ -14,9 +15,9 @@ export default async function Oauth(req: NextApiRequest, res: NextApiResponse) {
       headers: {
         Accept: 'application/json'
       }
-    });
+    }); 
 
-    return res.redirect(`${process.env.MOVEIT_BASE_URL}?access_token=${access_token}`)
+    return res.redirect(`${process.env.MOVEIT_BASE_URL}/login/github/auth?access_token=${access_token}`)
 
   } catch(e) {
     console.log(e);
