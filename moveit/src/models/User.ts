@@ -1,24 +1,32 @@
-import mongoose from 'mongoose';
+import Adapters from "next-auth/adapters"
 
-const UserSchema = new mongoose.Schema({
-  githubId: {
-    type: Number,
-  },
-  login: {
-    type: String,
-    required: true
-  },
-  avatar_url: {
-    type: String,
-  },
-  name: {
-    type: String,
-    default: null
-  },
-  email: {
-    type: String,
-    default: null
-  },
-});
+export default class User extends (<any>Adapters.TypeORM.Models.User.model) {
+  constructor(name, email, image, emailVerified) {
+    super(name, email, image, emailVerified)
+  }
+}
 
-export const User = mongoose.models.User || mongoose.model('User', UserSchema);
+export const UserSchema = {
+  name: "User",
+  target: User,
+  columns: {
+    ...Adapters.TypeORM.Models.User.schema.columns,
+
+    level: {
+      type: 'integer',
+      default: 1
+    },
+    currentExperience: {
+      type: 'integer',
+      default: 0
+    },
+    totalExperience: {
+      type: 'integer',
+      default: 0
+    },
+    challengesCompleted: {
+      type: 'integer',
+      default: 0
+    },
+  },
+}

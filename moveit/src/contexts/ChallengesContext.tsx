@@ -4,14 +4,11 @@ import challenges from '../../challenges.json';
 import Cookies from 'js-cookie';
 import { LevelUpModal } from '../components/LevelUpModal';
 import axios from 'axios';
+import { User } from 'next-auth';
 
 interface ChallengesProviderProps {
   children: React.ReactNode
-  level: number;
-  currentExperience: number;
-  challengesCompleted: number;
-  totalExperience: number;
-  userId: number;
+  user: User;
 }
 
 interface Challenge {
@@ -37,13 +34,12 @@ const ChallengesContext = createContext({} as ChallengesContextData);
 
 export function ChallengesProvider({ children, ...rest }: ChallengesProviderProps) { 
 
-  const [level, setLevel] = useState(rest.level ?? 1);
-  const [currentExperience, setCurrentExperience] = useState(rest.currentExperience ?? 0);
-  const [challengesCompleted, setChallengesCompleted] = useState(rest.challengesCompleted ?? 0);
-  const [totalExperience, setTotalExperience] = useState(rest.totalExperience ?? 0);
+  const [level, setLevel] = useState(rest.user.level ?? 1);
+  const [currentExperience, setCurrentExperience] = useState(rest.user.currentExperience ?? 0);
+  const [challengesCompleted, setChallengesCompleted] = useState(rest.user.challengesCompleted ?? 0);
+  const [totalExperience, setTotalExperience] = useState(rest.user.totalExperience ?? 0);
 
   const [isLevelUpModalOpen, SetIsLevelModalOpen] = useState(false);
-
   const [activeChallenge, setActiveChallenge] = useState(null);
 
   const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
@@ -52,19 +48,28 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     Notification.requestPermission();
   }, []);
 
-  useEffect(() => { 
-    Cookies.set('level', level.toString());
-    Cookies.set('currentExperience', currentExperience.toString());
-    Cookies.set('challengesCompleted', challengesCompleted.toString());
-    Cookies.set('totalExperience', totalExperience.toString());
-  }, [level, currentExperience, challengesCompleted]);
+  // useEffect(() => { 
+  //   Cookies.set('user', JSON.stringify({
+  //     ...rest.user,
+  //     level,
+  //     challengesCompleted,
+  //     totalExperience,
+  //     currentExperience
+  //   }));
+  // }, [level, currentExperience, challengesCompleted]);
 
-  async function challengeChange(data) {
-    await axios.post(`/api/scores/update/${data.githubId}`, {
-      currentExperience: data.currentExperience,
-      challengesCompleted: data.challengesCompleted,
-      level: data.level,
-      totalExperience: data.totalExperience
+  async function challengeChange({
+    id, 
+    currentExperience, 
+    challengesCompleted, 
+    level, 
+    totalExperience 
+  }: User) {
+    await axios.post(`/api/update/${id}`, {
+      currentExperience,
+      challengesCompleted,
+      level,
+      totalExperience
     });
   }
 
@@ -115,7 +120,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     setTotalExperience( totalExperience + amount);
     
     challengeChange({
-      githubId: rest.userId,
+      ...rest.user,
       currentExperience: finalExperience,
       challengesCompleted: challengesCompleted + 1,
       level: l,

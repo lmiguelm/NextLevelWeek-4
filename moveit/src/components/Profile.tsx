@@ -4,15 +4,11 @@ import { useChallengeContext } from '../contexts/ChallengesContext';
 
 import { ArrowUpCircle } from 'react-bootstrap-icons';
 
-interface UserData {
-  githubId: number;
-  login: string;
-  name: string;
-  avatar_url: string;
-}
+import { User } from 'next-auth';
+
 
 interface ProfileProps {
-  user: UserData;
+  user: User;
 }
 
 export function Profile( { user }: ProfileProps) {
@@ -21,9 +17,9 @@ export function Profile( { user }: ProfileProps) {
 
   return (
     <div className={styles.profileContainer}>
-      <img src={user.avatar_url} alt={user.login}/>
+      <img src={user.image} alt={ user.name ?? `${user.id}` }/>
       <div>
-        <strong>{user.login}</strong>
+        <strong>{user.name}</strong>
         <p>
           <ArrowUpCircle color="var(--green)" style={{ marginRight: '0.5rem' }} />
           Level: {level}

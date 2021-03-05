@@ -1,5 +1,4 @@
 import Link from 'next/link';
-import { useAuth } from '../contexts/AuthContext';
 
 import styles from '../styles/components/Sidebar.module.css';
 
@@ -13,9 +12,9 @@ interface SidebarProps {
   active: 'home' | 'leaderboard'
 }
 
-export function Sidebar({ active }: SidebarProps) {
+import { signOut, session } from 'next-auth/client';
 
-  const { logout } = useAuth();
+export function Sidebar({ active }: SidebarProps) {
 
   return (
     <div className={styles.container}>
@@ -49,7 +48,7 @@ export function Sidebar({ active }: SidebarProps) {
 
       <footer>
         <Link href="/login">
-          <button type="button" onClick={logout}>
+          <button type="button" onClick={() => signOut({ callbackUrl: '/login' })}>
             <BoxArrowInLeft size={30} color="var(--gray-line)"/>
           </button>
         </Link>
