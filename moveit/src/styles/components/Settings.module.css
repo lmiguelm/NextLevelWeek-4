@@ -34,7 +34,7 @@
 
   background: var(--background);
 
-  position: absolute;
+  position: fixed;
   left: 0;
   right: 0;
   top: 0;
@@ -91,4 +91,29 @@
 }
 .modalContainer main div svg:hover,.modalContainer header svg:hover {
   filter: brightness(0.9);
+}
+
+.modalContainer main div:nth-child(2n), .modalContainer main div:nth-child(3n) {
+  display: none;
+  justify-content: flex-start;
+  align-items: center;
+  margin-top: 2rem;
+}
+
+.modalContainer main div:nth-child(2n) {
+  margin-top: 3rem;
+}
+
+.modalContainer main div:nth-child(2n) svg, .modalContainer main div:nth-child(3n) svg {
+  margin-right: 1rem;
+}
+
+
+@media(max-width: 768px) {
+  .modalContainer {
+    width: 23rem;
+  }
+  .modalContainer main div:nth-child(2n), .modalContainer main div:nth-child(3n) {
+    display: flex;
+  }
 }

@@ -57,3 +57,9 @@
   filter: brightness(0.9);
 }
 
+@media(max-width: 768px) {
+  .container {
+    display: none;
+  }
+}
+

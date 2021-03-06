@@ -46,6 +46,7 @@
   display: grid;
   grid-template-columns: 1fr 4.5fr 1.5fr 1.5fr;
   gap: 0.25rem;
+  min-width: 200px;
 }
 
 .content main div p {
@@ -111,4 +112,10 @@
 .content div span {
   color: var(--blue-dark);
   font-weight: 600;
+}
+
+@media(max-width: 768px) {
+  .content main div  {
+    /* grid-template-columns: 1fr 1fr;  */
+  }
 }

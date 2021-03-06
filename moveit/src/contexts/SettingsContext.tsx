@@ -1,5 +1,6 @@
 import { createContext, useContext, useState } from 'react';
 import { Settings } from '../components/Settings';
+import { useSession } from 'next-auth/client';
 
 interface SettingsContextData {
   isSettingsModalOpen: boolean;
@@ -14,6 +15,8 @@ interface SettingsProvider {
 const SettingsContext = createContext({} as SettingsContextData);
 
 export function SettingsProvider({children}: SettingsProvider) {
+
+  const [session] = useSession();
 
   const [isSettingsModalOpen, setIsSettingsModalOpen] = useState(false);
 
@@ -34,7 +37,9 @@ export function SettingsProvider({children}: SettingsProvider) {
       }}
     >
       { children }
-      <Settings/>
+      {session && (
+        <Settings/>
+      )}
     </SettingsContext.Provider>
   )
 }
