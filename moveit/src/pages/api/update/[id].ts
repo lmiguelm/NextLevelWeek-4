@@ -1,5 +1,6 @@
 import { NextApiRequest, NextApiResponse } from 'next';
 import query from '../../../config/database';
+import jwt from 'next-auth/jwt';
 
 export default async function Update(req: NextApiRequest, res: NextApiResponse) {
   const { 

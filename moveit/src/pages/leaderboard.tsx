@@ -1,5 +1,6 @@
 import Head from 'next/head';
 import { GetStaticProps, } from 'next';
+import Router from 'next/router';
 
 import { User } from 'next-auth';
 import { useSession } from 'next-auth/client';
@@ -14,6 +15,7 @@ import {
 } from 'react-bootstrap-icons';
 
 import styles from '../styles/pages/LeaderBoard.module.css';
+import { useEffect } from 'react';
 
 interface LeaderboardProps {
   users: User[];
@@ -23,83 +25,85 @@ export default function Leaderboard({ users }: LeaderboardProps) {
 
   const [session, loading] = useSession();
 
+  useEffect(() => {
+    if(!session) {
+      Router.push('/login');
+    }
+  }, []);
+
   if(loading) {
     return <h1>Carregando....</h1>
   } else {
-    if(!session) {
-      return <h1>VOCÊ PRECISA ESTAR LOGADO PARA ACESSAR ESSA PÁGINA</h1>
-    } else {
-      return (
-        <div className={styles.container}>
-          <Head>
-            <title>Ranking | move.it</title>
-          </Head>
-    
-          <Sidebar active="leaderboard"/>
-    
-          <div className={styles.content}>
-            <header>
-              <h1>Leaderboard</h1>
-              <p>
-                <InfoCircleFill color="var(--blue-dark)" style={{ marginRight: '0.25rem' }}/>
-                Ranking é atualizado a cada 5 minutos.
-              </p>
-            </header>
-    
-            <main>
-              
-              <div>
-                <p>PONTUAÇÃO</p>
-                <p>USUÁRIO</p>
-                <p>DESAFIOS</p>
-                <p>EXPERIÊNCIA</p>
-              </div>
-    
-              { users.map((user, index) => (
+    return (
+      <div className={styles.container}>
+        <Head>
+          <title>Ranking | move.it</title>
+        </Head>
+  
+        <Sidebar active="leaderboard"/>
+  
+        <div className={styles.content}>
+          <header>
+            <h1>Leaderboard</h1>
+            <p>
+              <InfoCircleFill color="var(--blue-dark)" style={{ marginRight: '0.25rem' }}/>
+              Ranking é atualizado a cada 5 minutos.
+            </p>
+          </header>
+  
+          <main>
+            
+            <div>
+              <p>PONTUAÇÃO</p>
+              <p>USUÁRIO</p>
+              <p>DESAFIOS</p>
+              <p>EXPERIÊNCIA</p>
+            </div>
+  
+            { users.map((user, index) => (
+              <div
+                key={user.id}
+              >
                 <div
-                  key={user.id}
+                  className={styles.punctuation}
                 >
-                  <div
-                    className={styles.punctuation}
-                  >
-                      {index + 1}
-                  </div>
-    
-                  <div 
-                    className={styles.user}
-                  >
-                    <img src={user.image}/>
-                    <article>
-                      <strong>{user.name}</strong>
-                      <article>
-                        <ArrowUpCircle color="var(--green)" style={{ marginRight: '0.5rem' }}/>
-                        <p>Level {user.level}</p>
-                      </article>
-                    </article>
-                  </div>
-    
-                  <div>
-                    <span>
-                      {user.challengesCompleted}
-                    </span> 
-                    completados
-                  </div>
-    
-                  <div>
-                    <span>
-                      {user.totalExperience}
-                    </span> 
-                    xp
-                  </div>
-    
+                    {index + 1}
                 </div>
-              )) }
-              <br/>
-            </main>
-          </div>
+  
+                <div 
+                  className={styles.user}
+                >
+                  <img src={user.image}/>
+                  <article>
+                    <strong>{user.name}</strong>
+                    <article>
+                      <ArrowUpCircle color="var(--green)" style={{ marginRight: '0.5rem' }}/>
+                      <p>Level {user.level}</p>
+                    </article>
+                  </article>
+                </div>
+  
+                <div>
+                  <span>
+                    {user.challengesCompleted}
+                  </span> 
+                  completados
+                </div>
+  
+                <div>
+                  <span>
+                    {user.totalExperience}
+                  </span> 
+                  xp
+                </div>
+  
+              </div>
+            )) }
+            <br/>
+          </main>
         </div>
-      )
-    }
+      </div>
+    )
   }
 }
 

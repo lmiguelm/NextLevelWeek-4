@@ -1,10 +1,8 @@
-import Link from 'next/link';
-import axios from 'axios';
 import styles from '../styles/pages/Login.module.css';
 
 import {
-  Trophy,
-  Github
+  Github,
+  Google
 } from 'react-bootstrap-icons';
 
 import { signIn } from 'next-auth/client';
@@ -30,12 +28,10 @@ export default function Login() {
           Logar com GitHub
         </button>
 
-        <Link href="/leaderboard">
-          <button type="button">
-            <Trophy size={24} style={{  marginRight: '0.8rem' }}/>
-            Ver classificação
-          </button>
-        </Link>
+        <button type="button" onClick={() => signIn('google', { callbackUrl: '/', })}>
+          <Google   size={24} style={{ marginRight: '0.8rem' }}/>
+          Logar com Google
+        </button>
       </main>
     </div>
   )
