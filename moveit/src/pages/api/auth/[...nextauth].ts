@@ -35,6 +35,5 @@ export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res,
       }
     }
   ),
-
   database: process.env.MYSQL_URL
 }); 

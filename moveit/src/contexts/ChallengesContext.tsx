@@ -48,16 +48,6 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     Notification.requestPermission();
   }, []);
 
-  // useEffect(() => { 
-  //   Cookies.set('user', JSON.stringify({
-  //     ...rest.user,
-  //     level,
-  //     challengesCompleted,
-  //     totalExperience,
-  //     currentExperience
-  //   }));
-  // }, [level, currentExperience, challengesCompleted]);
-
   async function challengeChange({
     id, 
     currentExperience, 
@@ -65,7 +55,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     level, 
     totalExperience 
   }: User) {
-    await axios.post(`/api/update/${id}`, {
+    await axios.put('/api/update', {
       currentExperience,
       challengesCompleted,
       level,

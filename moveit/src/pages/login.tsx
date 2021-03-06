@@ -25,12 +25,12 @@ export default function Login() {
 
         <button type="button" onClick={() => signIn('github', { callbackUrl: '/', })}>
           <Github size={24} style={{ marginRight: '0.8rem' }}/>
-          Logar com GitHub
+          Entrar com GitHub
         </button>
 
         <button type="button" onClick={() => signIn('google', { callbackUrl: '/', })}>
           <Google   size={24} style={{ marginRight: '0.8rem' }}/>
-          Logar com Google
+          Entrar com Google
         </button>
       </main>
     </div>
