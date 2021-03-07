@@ -12,7 +12,7 @@ export default async function GetRanking(req: NextApiRequest, res: NextApiRespon
       total_experience AS totalExperience,
       challenges_completed AS challengesCompleted
     FROM
-      users
+      user__users
     ORDER BY
       total_experience DESC
   `;

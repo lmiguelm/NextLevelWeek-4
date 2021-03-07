@@ -17,8 +17,19 @@ import {
 import styles from '../styles/pages/LeaderBoard.module.css';
 import { useEffect } from 'react';
 
+import {Loading} from '../components/Loading';
+import animation from '../../public/lotties/authentication.json';
+
+interface IUser extends User {
+  id: number;   
+  totalExperience: number;
+  currentExperience: number;
+  level: number
+  challengesCompleted: number;
+}
+
 interface LeaderboardProps {
-  users: User[];
+  users: IUser[];
 }
 
 export default function Leaderboard({ users }: LeaderboardProps) {
@@ -26,13 +37,17 @@ export default function Leaderboard({ users }: LeaderboardProps) {
   const [session, loading] = useSession();
 
   useEffect(() => {
-    if(!session) {
+    if(!loading && !session) {
       Router.push('/login');
     }
-  }, []);
+  }, [loading]);
 
   if(loading) {
-    return <h1>Carregando....</h1>
+    return (
+      <Loading animationData={animation}>
+        <h3 style={{ marginTop: '-1rem' }}>Carregando...</h3>
+      </Loading>
+    )
   } else {
     return (
       <div className={styles.container}>
@@ -60,7 +75,7 @@ export default function Leaderboard({ users }: LeaderboardProps) {
               <p>EXPERIÊNCIA</p>
             </div>
   
-            { users.map((user, index) => (
+            { users && users.map((user, index) => (
               <div
                 key={user.id}
               >
@@ -96,7 +111,9 @@ export default function Leaderboard({ users }: LeaderboardProps) {
                   </span> 
                   xp
                 </div>
-  
+                {/* <br/>
+                <br/>
+                <br/> */}
               </div>
             )) }
             <br/>
@@ -109,11 +126,11 @@ export default function Leaderboard({ users }: LeaderboardProps) {
 
 export const getStaticProps: GetStaticProps = async () => {
 
-  const reponse = await axios.get(`${process.env.MOVEIT_BASE_URL}/api/getRanking`);
+  const response = await axios.get(`${process.env.MOVEIT_BASE_URL}/api/getRanking`);
 
   return {
     props: {
-      users: reponse.data,
+      users: response.data
     },
     revalidate: 5 * 60
   }

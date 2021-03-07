@@ -4,7 +4,7 @@ import { getSession } from 'next-auth/client';
 
 export default async function Update(req: NextApiRequest, res: NextApiResponse) {
 
-  const response = await getSession({ req });
+  const response: any  = await getSession({ req });
 
   if(response) {
     const { 
@@ -15,9 +15,8 @@ export default async function Update(req: NextApiRequest, res: NextApiResponse) 
     } = req.body;
   
     try {
-      console.log(level, currentExperience, totalExperience, challengesCompleted, response.user.id)
       await query({
-        query: 'UPDATE users SET level=?, current_experience=?, total_experience=?, challenges_completed=? WHERE id=?',
+        query: `UPDATE user__users SET level=?, current_experience=?, total_experience=?, challenges_completed=? WHERE id=?`,
         values: [ level, currentExperience, totalExperience, challengesCompleted, response.user.id ]
       });
     } catch (e) {

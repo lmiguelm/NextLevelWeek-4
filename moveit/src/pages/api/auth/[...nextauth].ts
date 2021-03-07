@@ -8,6 +8,15 @@ import Providers from 'next-auth/providers';
 
 import Models from '../../../Models';
 
+interface IUser extends User {
+  id: number;   
+  totalExperience: number;
+  currentExperience: number;
+  level: number
+  challengesCompleted: number;
+}
+
+
 export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res, {
   providers: [
     Providers.GitHub({
@@ -22,8 +31,8 @@ export default (req: NextApiRequest, res: NextApiResponse) => NextAuth(req, res,
   ],
 
   callbacks: {
-    async session(session: SessionBase, user: User) {
-      return Promise.resolve({session, user});
+    async session(session: SessionBase, user: IUser) {
+      return Promise.resolve({session, user });
     }
   },
   

@@ -6,9 +6,16 @@ import { ArrowUpCircle } from 'react-bootstrap-icons';
 
 import { User } from 'next-auth';
 
+interface IUser extends User {
+  id: number;
+  totalExperience: number;
+  currentExperience: number;
+  level: number;
+  challengesCompleted: number;
+}
 
 interface ProfileProps {
-  user: User;
+  user: IUser;
 }
 
 export function Profile( { user }: ProfileProps) {

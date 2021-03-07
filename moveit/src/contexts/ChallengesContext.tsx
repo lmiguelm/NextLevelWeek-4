@@ -1,14 +1,21 @@
 import { createContext, useContext, useEffect, useState } from 'react';
 import challenges from '../../challenges.json';
 
-import Cookies from 'js-cookie';
 import { LevelUpModal } from '../components/LevelUpModal';
 import axios from 'axios';
 import { User } from 'next-auth';
 
+interface IUser extends User {
+  id: number;   
+  totalExperience: number;
+  currentExperience: number;
+  level: number
+  challengesCompleted: number;
+}
+
 interface ChallengesProviderProps {
   children: React.ReactNode
-  user: User;
+  user: IUser;
 }
 
 interface Challenge {
@@ -34,10 +41,17 @@ const ChallengesContext = createContext({} as ChallengesContextData);
 
 export function ChallengesProvider({ children, ...rest }: ChallengesProviderProps) { 
 
+
+  useEffect(() => {
+    addEventListener('resize', () => setWidth(window.innerWidth));
+  }, []);
+
   const [level, setLevel] = useState(rest.user.level ?? 1);
   const [currentExperience, setCurrentExperience] = useState(rest.user.currentExperience ?? 0);
   const [challengesCompleted, setChallengesCompleted] = useState(rest.user.challengesCompleted ?? 0);
   const [totalExperience, setTotalExperience] = useState(rest.user.totalExperience ?? 0);
+
+  const [width, setWidth] = useState(1000);
 
   const [isLevelUpModalOpen, SetIsLevelModalOpen] = useState(false);
   const [activeChallenge, setActiveChallenge] = useState(null);
@@ -45,7 +59,9 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
   const experienceToNextLevel = Math.pow((level + 1) * 4, 2);
 
   useEffect(() => {
-    Notification.requestPermission();
+    if(width < 768) {
+      Notification.requestPermission();
+    }
   }, []);
 
   async function challengeChange({
@@ -54,7 +70,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
     challengesCompleted, 
     level, 
     totalExperience 
-  }: User) {
+  }: IUser) {
     await axios.put('/api/update', {
       currentExperience,
       challengesCompleted,
@@ -71,7 +87,7 @@ export function ChallengesProvider({ children, ...rest }: ChallengesProviderProp
 
     new Audio('/notification.mp3').play();
 
-    if(Notification.permission === 'granted') {
+    if(Notification.permission === 'granted' && width > 768) {
       new Notification('Novo desafio 🥳', {
         body: `Valendo ${challenge.amount} XP!`
       });

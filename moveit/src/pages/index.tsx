@@ -16,16 +16,16 @@ import { ChallengesProvider } from '../contexts/ChallengesContext';
 
 import styles from '../styles/pages/Home.module.css';
 
-interface ScoreData {
-  level: number;
-  currentExperience: number;
-  challengesCompleted: number;
+interface IUser extends User {
+  id: number;
   totalExperience: number;
+  currentExperience: number;
+  level: number;
+  challengesCompleted: number;
 }
 
 interface HomeProps {
-  user: User;
-  score: ScoreData
+  user: IUser;
 }
 
 export default function Home(props: HomeProps) {
