@@ -16,7 +16,7 @@ export default async function Update(req: NextApiRequest, res: NextApiResponse) 
   
     try {
       await query({
-        query: `UPDATE user__users SET level=?, current_experience=?, total_experience=?, challenges_completed=? WHERE id=?`,
+        query: `UPDATE users SET level=?, current_experience=?, total_experience=?, challenges_completed=? WHERE id=?`,
         values: [ level, currentExperience, totalExperience, challengesCompleted, response.user.id ]
       });
     } catch (e) {
